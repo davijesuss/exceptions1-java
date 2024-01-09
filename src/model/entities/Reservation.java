@@ -8,10 +8,10 @@ public class Reservation {
 
 	private Integer roomNumber;
 	private Date checkIn;
-    private Date checkOut;
-    
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-    
+	private Date checkOut;
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
 	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
 		roomNumber = roomNumber;
 		this.checkIn = checkIn;
@@ -29,7 +29,7 @@ public class Reservation {
 	public Date getCheckIn() {
 		return checkIn;
 	}
-	
+
 	public Date getCheckOut() {
 		return checkOut;
 	}
@@ -38,22 +38,24 @@ public class Reservation {
 		long diff = checkOut.getTime() - checkIn.getTime();
 		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
 	}
-    
-	public void UpdateDates(Date CheckIn, Date CheckOut) {
+
+	public String UpdateDates(Date CheckIn, Date CheckOut) {
+		Date now = new Date();
+		if (CheckIn.before(now) || CheckOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+		}
+		if (!CheckOut.after(CheckIn)) {
+			return "Check-out date must be after check-in date";
+		}
 		this.checkIn = CheckIn;
 		this.checkOut = CheckOut;
+
+		return null;
 	}
-    
+
 	@Override
 	public String toString() {
-		return "Room " 
-				+ roomNumber
-				+", check-in " 
-				+ sdf.format(checkIn)
-				+ ", check-out "
-				+ sdf.format(checkOut)
-				+ ", "
-				+ duration()
-				+ " nights";
+		return "Room " + roomNumber + ", check-in: " + sdf.format(checkIn) + ", check-out: " + sdf.format(checkOut)
+				+ ", " + duration() + " nights";
 	}
 }
